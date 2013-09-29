@@ -9,3 +9,11 @@ The following text objects are provided:
 - `ie`: inside environment. Recognizes matching \begin and \end tags.
 - `ae`: around environment. Like `ie`, but also selects the lines with \begin and \end on them.
 - `%`: jump around between matched begin/end blocks. If the current line does not have one, use default % motion. Works in visual mode.
+
+Vundle
+===
+
+Install via vundle with
+```
+Bundle 'gibiansky/vim-latex-objects'
+```
