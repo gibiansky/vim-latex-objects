@@ -124,3 +124,9 @@ endfunction
 
 map % :call MatchedBlock()<CR>
 vmap % :call VisualMatchedBlock()<CR>
+
+" Mathematica mappings
+imap <C-6> ^{}
+imap <C-^> ^{}
+imap <C--> _{}
+imap <C-_> _{}
