@@ -96,7 +96,7 @@ function! SelectInMath(surround)
         call cursor(prevLine, prevCol + delimLen)
     end
 
-    if g:latex_select_math_lines
+    if g:latex_select_math_lines && next == 2
         normal! V
     else
         normal! v
