@@ -1,3 +1,7 @@
+if !exists("g:latex_select_math_lines")
+    let g:latex_select_math_lines = 0
+end
+
 function! NextEnd()
     let curline = line(".") + 1
     let begins = 1
@@ -74,30 +78,35 @@ function! SelectInMath(surround)
         let delimLen = 2
     end
 
+    if !a:surround 
+        if len(getline(prevLine)) <= prevCol + delimLen
+            let prevLine = prevLine + 1
+            let prevCol = -delimLen + 1
+        end
+
+        if nextCol <= 1
+            let nextLine = nextLine - 1
+            let nextCol = len(getline(nextLine)) + 1
+        end
+    end
+
     if a:surround
         call cursor(prevLine, prevCol)
     else
         call cursor(prevLine, prevCol + delimLen)
     end
 
-    normal! v
+    if g:latex_select_math_lines
+        normal! V
+    else
+        normal! v
+    end
     if a:surround
         call cursor(nextLine, nextCol + delimLen - 1)
     else
         call cursor(nextLine, nextCol - 1)
     end
 endfunction
-
-vnoremap im <ESC>:call SelectInMath(0)<CR>
-vnoremap am <ESC>:call SelectInMath(1)<CR>
-omap im :normal vim<CR>
-omap am :normal vam<CR>
-
-" Operate on LaTeX quotes
-vmap iq <ESC>?``<CR>llv/''<CR>h
-omap iq :normal viq<CR>
-vmap aq <ESC>?``<CR>v/''<CR>l
-omap aq :normal vaq<CR>
 
 " Use % to jump between begin/end
 function! MatchedBlock()
@@ -121,12 +130,3 @@ function! VisualMatchedBlock()
     exec "normal!" . visualmode()
     call cursor(end, 0)
 endfunction
-
-map % :call MatchedBlock()<CR>
-vmap % :call VisualMatchedBlock()<CR>
-
-" Mathematica mappings
-imap <C-6> ^{}
-imap <C-^> ^{}
-imap <C--> _{}
-imap <C-_> _{}
