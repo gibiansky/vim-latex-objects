@@ -2,7 +2,7 @@ if !exists("g:latex_select_math_lines")
     let g:latex_select_math_lines = 0
 end
 
-function! NextEnd()
+function! <sid>NextEnd()
     let curline = line(".") + 1
     let begins = 1
     while begins > 0
@@ -19,7 +19,7 @@ function! NextEnd()
     return curline - 1
 endfunction
 
-function! PrevBegin()
+function! <sid>PrevBegin()
     let curline = line(".")
     let ends = 1
     while ends > 0
@@ -36,26 +36,28 @@ function! PrevBegin()
     return curline + 1
 endfunction
 
-function! SelectInEnvironment(surround)
-    let start = PrevBegin()
-    let end = NextEnd()
+function! <sid>SelectInEnvironment(surround)
+    let start = <sid>PrevBegin()
+    let end = <sid>NextEnd()
 
-    call cursor(start, 0)
+    keepjumps call cursor(start, 0)
     if !a:surround
         normal! j
     end
     normal! V
-    call cursor(end, 0)
+    keepjumps call cursor(end, 0)
     if !a:surround
         normal! k
     end
 endfunction
 
 " Operate on environments (that have begin and ends on separate lines)
-vnoremap ie <ESC>:call SelectInEnvironment(0)<CR>
-vnoremap ae <ESC>:call SelectInEnvironment(1)<CR>
-omap ie :normal Vie<CR>
-omap ae :normal Vae<CR>
+xnoremap <silent> ie <ESC>:call <sid>SelectInEnvironment(0)<CR>
+xnoremap <silent> ae <ESC>:call <sid>SelectInEnvironment(1)<CR>
+
+nnoremap  <SID>(V) V
+onoremap <silent> ie :execute "keepjumps normal \<SID>(V)ie"<CR>
+onoremap <silent> ae :execute "keepjumps normal \<SID>(V)ae"<CR>
 
 " Operate on math
 function! SelectInMath(surround)
