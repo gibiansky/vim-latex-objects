@@ -4,7 +4,7 @@ end
 
 function! <sid>NextEnd()
     let curline = line(".") + 1
-    let begins = 1
+    let begins = getline(".") !~ '.*\\end.*$'
     while begins > 0
         if getline(curline) =~ '.*\\begin.*$'
             let begins += 1
@@ -20,7 +20,7 @@ function! <sid>NextEnd()
 endfunction
 
 function! <sid>PrevBegin()
-    let curline = line(".")
+    let curline = line(".") - (getline(".") =~ '.*\\end.*$')
     let ends = 1
     while ends > 0
         if getline(curline) =~ '.*\\begin.*$'
